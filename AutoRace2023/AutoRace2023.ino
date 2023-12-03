@@ -7,10 +7,10 @@
 #define sstrai 12
 #define ssphai 13
 
-#define trig 11
-#define echo 10
-unsigned long thoigian; 
-int khoangcach; 
+#define trigPin 11
+#define echoPin 10
+unsigned long duration; 
+int distance; 
 
 const int EnA = 5;
 const int EnB = 6;
@@ -40,8 +40,8 @@ void setup()
   pinMode(ss4, INPUT);
   pinMode(ss5, INPUT);
   
-  pinMode(trig, OUTPUT);
-  pinMode(echo, INPUT);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
   
   pinMode(ssphai, INPUT);
   pinMode(sstrai, INPUT);
@@ -52,7 +52,7 @@ void setup()
   pinMode(inB2, OUTPUT);
   pinMode(EnA, OUTPUT);
   pinMode(EnB, OUTPUT);
-  Serial.begin(9600);
+  Serial.begin(115200);
   I = 0;
   D = 0;
   P = 0;
@@ -62,7 +62,7 @@ void setup()
 void loop()
 {
   check_barrier();
-  if (khoangcach <= 15) {
+  if (distance <= 15) {
     digitalWrite(inA1, LOW);
     digitalWrite(inA2, LOW);
     digitalWrite(inB1, LOW);
@@ -93,8 +93,8 @@ void loop()
       re_phai();
       delay(250);
     }
-  calculate_pid();
-  motor_control();
+    calculate_pid();
+    motor_control();
    }
  }
 }
@@ -145,8 +145,6 @@ void read_sensor_value()
   phai = digitalRead(ssphai);
   trai = digitalRead(sstrai);
 
-  // Giữ nguyên cách đọc giá trị từ cảm biến
-
   if ((sensor[0] == 0) && (sensor[1] == 0) && (sensor[2] == 0) && (sensor[3] == 0) && (sensor[4] == 1))
     error = 4;
   else if ((sensor[0] == 0) && (sensor[1] == 0) && (sensor[2] == 0) && (sensor[3] == 1) && (sensor[4] == 1))
@@ -179,11 +177,10 @@ void read_sensor_value()
     digitalWrite(inB1, HIGH);
     digitalWrite(inB2, LOW);
     }
-  
+    
   else
     error = 0;
-    
-  if(sensor[2] == 1 )
+  if (sensor[2] == 1 )
    *ptr = 70  ;
     else
   {
@@ -257,16 +254,16 @@ void tien_cham()
 }
 
 void check_barrier() {
-  digitalWrite(trig,0); //Tắt chân trig
+  digitalWrite(trigPin,0); // Turn off trigPin
   delayMicroseconds(2); 
-  digitalWrite(trig,1); //bật chân trig để phát xung
-  delayMicroseconds(10); //Xung có độ rộng là 10 microsecond
-  digitalWrite(trig,0);
-  //Chân echo sẽ nhận xung phản xạ lại
-  //Và đo độ rộng xung cao ở chân echo
-  thoigian = pulseIn (echo, HIGH);
+  digitalWrite(trigPin,1); // Turn on the trigPin to generate a pulse
+  delayMicroseconds(10);   // The pulse has a width of 10 microseconds
+  digitalWrite(trigPin,0);
+  // The echoPin will receive the reflected pulse
+  // And measure the high pulse width at the echoPin
+  duration = pulseIn (echoPin, HIGH);
   // Sound speed = 340 m/s => 29.412 microSeconds/cm 
-  khoangcach = int (thoigian / 2 / 29.412); 
-  Serial.print("Khoảng cách: ");
-  Serial.println(khoangcach);
+  distance = int (duration / 2 / 29.412); 
+  Serial.print("Distance: ");
+  Serial.println(distance);
 }

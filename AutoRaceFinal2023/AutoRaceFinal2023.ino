@@ -126,7 +126,7 @@ void loop()
       re_phai();
       delay(500);*/
       dung();
-while(true){}}
+      while(true){}}
     else
     {
       calculate_pid();
@@ -237,13 +237,12 @@ void read_sensor_value()
     digitalWrite(inA2, LOW);
     digitalWrite(inB1, HIGH);
     digitalWrite(inB2, LOW);
-    }
-  
+  } 
   else
     error = 0;
-    if(sensor[2] == 1 )
+    if (sensor[2] == 1 )
     *ptr = 110  ;
-    else
+  else
   {
     *ptr = 100;
   }
@@ -316,13 +315,13 @@ void tien_cham()
 
 float readUltrasonicDistance() 
 {
-  digitalWrite(trigPin,0); //Tắt chân trig
+  digitalWrite(trigPin,0); // Turn off trigPin
   delayMicroseconds(2); 
-  digitalWrite(trigPin,1); //bật chân trig để phát xung
-  delayMicroseconds(10); //Xung có độ rộng là 10 microsecond
+  digitalWrite(trigPin,1); // Turn on the trigPin to generate a pulse
+  delayMicroseconds(10);   // The pulse has a width of 10 microseconds
   digitalWrite(trigPin,0);
-  //Chân echo sẽ nhận xung phản xạ lại
-  //Và đo độ rộng xung cao ở chân echo
+  // The echoPin will receive the reflected pulse
+  // And measure the high pulse width at the echoPin
   float duration = pulseIn (echoPin, HIGH);
   // Sound speed = 340 m/s => 29.412 microSeconds/cm 
   float distance = int (duration / 2 / 29.412); 
